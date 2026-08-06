@@ -25,6 +25,12 @@ const alarmTime = computed(() => {
   })
 })
 
+const parsedTitle = computed(() => {
+  const [, code, description] = props.keyword.match(/^([A-Za-z]+\s*\d+)\s*-\s*(.+)$/) ?? []
+  if (code && description) return { code: code.trim(), description: description.trim() }
+  return { code: null, description: props.keyword }
+})
+
 const elapsed = ref('')
 
 function updateElapsed() {
@@ -51,7 +57,8 @@ onUnmounted(() => clearInterval(timer))
       <div class="header-left">
         <div class="header-badge" v-if="ruleLabel">{{ ruleLabel }}</div>
         <div class="header-badge" v-else>EINSATZ</div>
-        <div class="header-keyword">{{ keyword }}</div>
+        <div class="header-keyword">{{ parsedTitle.description }}</div>
+<div class="header-subcode" v-if="parsedTitle.code">{{ parsedTitle.code }}</div>
         <div class="header-address" v-if="address">{{ address }}</div>
       </div>
       <div class="header-right" v-if="alarmTime">
@@ -141,12 +148,23 @@ onUnmounted(() => clearInterval(timer))
   line-height: 1;
 }
 
+.header-subcode {
+  font-size: clamp(1rem, 2vw, 1.6rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  opacity: 0.75;
+  margin-bottom: 0.5rem;
+}
+
 .header-address {
   font-size: clamp(0.8rem, 1.4vw, 1.1rem);
   font-weight: 400;
   color: #ffbbbb;
   letter-spacing: 0.02em;
   opacity: 0.85;
+  margin-top: 0.5rem;
 }
 
 .header-right {
