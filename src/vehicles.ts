@@ -87,8 +87,8 @@ export function resolveVehicles(ids: string[]): Vehicle[] {
 
 /** Findet die passende Regel für ein Stichwort ("enthält"-Prüfung, case-insensitive) */
 export function findRule(title: string) {
-  const t = title.trim().toLowerCase()
+  const t = title.trim().toLowerCase().replace(/\s+/g, '')
   return vehicleConfig.rules.find(r =>
-    r.keywords.some(k => t.includes(k.toLowerCase()))
+    r.keywords.some(k => t.includes(k.toLowerCase().replace(/\s+/g, '')))
   ) ?? null
 }
