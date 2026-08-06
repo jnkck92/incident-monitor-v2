@@ -1,0 +1,9 @@
+services:
+  incident-monitor:
+    build:
+      context: .
+      args:
+        VITE_DIVERA_API_KEY: ${VITE_DIVERA_API_KEY}
+    ports:
+      - "80:80"
+    restart: unless-stopped
