@@ -7,7 +7,7 @@ ARG VITE_DIVERA_API_KEY
 ENV VITE_DIVERA_API_KEY=$VITE_DIVERA_API_KEY
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 COPY . .
 RUN npm run build
