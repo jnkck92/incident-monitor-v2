@@ -68,7 +68,10 @@ onUnmounted(() => clearInterval(timer))
     </header>
 
     <!-- ── FAHRZEUGLISTE ──────────────────────────────── -->
-    <main class="vehicles-section">
+    <main
+  class="vehicles-section"
+  :style="{ '--vehicle-count': String(Math.max(vehicles.length, 1)) }"
+>
       <template v-if="vehicles.length > 0">
         <div v-for="v in vehicles" :key="v.id" class="vehicle-row">
           <span class="vehicle-bullet" />
@@ -199,56 +202,53 @@ onUnmounted(() => clearInterval(timer))
   color: #ffe066;
 }
 
-/* ── Fahrzeugliste ── */
 .vehicles-section {
-  padding: 1.5rem 2.5rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.5rem;
+  padding: clamp(0.6rem, 1.4vh, 1.2rem) clamp(1rem, 2.4vw, 2rem);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(var(--vehicle-count), minmax(0, 1fr));
+  gap: clamp(0.25rem, 0.6vh, 0.5rem);
+  align-items: stretch;
 }
 
 .vehicle-row {
-  display: flex;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 1.5rem;
-  padding: 0.75rem 1.8rem;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  padding: clamp(0.3rem, 0.8vh, 0.7rem) clamp(0.7rem, 1.5vw, 1.2rem);
   border-left: 6px solid #cc0000;
   background: #1a1a1a;
-  border-radius: 0.40rem;
+  border-radius: 0.4rem;
 }
 
 .vehicle-bullet {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: clamp(0.35rem, 0.7vh, 0.7rem);
+  height: clamp(0.35rem, 0.7vh, 0.7rem);
   border-radius: 50%;
   background: #ff4444;
   flex-shrink: 0;
 }
 
 .vehicle-name {
-  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-size: clamp(1.2rem, calc(6vh - 0.2rem * var(--vehicle-count)), 4.5rem);
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: #ffffff;
-  flex: 1;
+  line-height: 1.05;
+  min-width: 0;
 }
 
 .vehicle-ric {
-  font-size: clamp(0.85rem, 1.5vw, 1.2rem);
+  font-size: clamp(0.9rem, calc(2.2vh + 0.1rem), 1.8rem);
   font-weight: 500;
-  color: #666666;
+  color: #888888;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   flex-shrink: 0;
-}
-
-.no-mapping {
-  font-size: clamp(1rem, 2vw, 1.6rem);
-  color: #666666;
-  font-style: italic;
-  padding: 1rem 1.5rem;
 }
 
 /* ── Footer ── */
