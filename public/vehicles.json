@@ -1,0 +1,49 @@
+{
+  "vehicles": [
+    { "id": "elw1",   "name": "ELW1",   "shortName": "ELW1",   "type": "Einsatzleitwagen",            "ric": "15/11-4" },
+    { "id": "hlf20",  "name": "HLF20",  "shortName": "HLF20",  "type": "Hilfeleistungslöschfahrzeug", "ric": "15/48-4" },
+    { "id": "tlf16",  "name": "TLF16",  "shortName": "TLF16",  "type": "Tanklöschfahrzeug",           "ric": "15/23-4" },
+    { "id": "rw1",    "name": "RW1",    "shortName": "RW1",    "type": "Rüstwagen",                   "ric": "15/52-4" },
+    { "id": "sw2000", "name": "SW2000", "shortName": "SW2000", "type": "Schlauchwagen",               "ric": "15/62-4" },
+    { "id": "mtw1",   "name": "MTW1",   "shortName": "MTW1",   "type": "Mannschaftstransportwagen",   "ric": "15/17-4" },
+    { "id": "rtb1",   "name": "RTB1",   "shortName": "RTB1",   "type": "Rettungsboot",                "ric": "15/78-4" }
+  ],
+
+  "defaultOrder": ["elw1", "hlf20", "tlf16", "rw1", "sw2000", "mtw1", "rtb1"],
+
+  "commandContact": "ELW 15/11-4",
+
+  "rules": [
+    { "label": "Gefahrgut Messeinsatz",                                  "color": "#3d6600", "keywords": ["CBRN011", "CBRN 011", "C 011", "C011"], "vehicleOrder": ["elw1", "hlf20"] },
+    { "label": "Gefahrgut klein",                                        "color": "#3d6600", "keywords": ["CBRN01", "CBRN 01", "C 01", "C01"], "vehicleOrder": ["elw1", "hlf20"] },
+    { "label": "Gefahrgut mittel",                                       "color": "#3d6600", "keywords": ["CBRN02", "CBRN 02", "C 02", "C02"], "vehicleOrder": ["elw1", "hlf20", "sw2000", "rw1", "tlf16", "mtw1"] },
+    { "label": "Gefahrgut groß",                                         "color": "#3d6600", "keywords": ["CBRN03", "CBRN 03", "C 03", "C03"], "vehicleOrder": ["elw1", "hlf20", "sw2000", "rw1", "tlf16", "mtw1"] },
+    { "label": "Klein- und Entstehungsbrände – PKW-Brand",               "color": "#b30000", "keywords": ["F011", "F 011"], "vehicleOrder": ["elw1", "hlf20", "tlf16", "sw2000"] },
+    { "label": "Klein- und Entstehungsbrände – Brandnachschau",          "color": "#b30000", "keywords": ["F012", "F 012"], "vehicleOrder": ["elw1", "hlf20"] },
+    { "label": "Klein- und Entstehungsbrände",                           "color": "#b30000", "keywords": ["F01", "F 01"], "vehicleOrder": ["elw1", "hlf20", "tlf16"] },
+    { "label": "Mittelbrand A – BMA/Rauchmelder unbestätigt",            "color": "#b30000", "keywords": ["F021", "F 021"], "vehicleOrder": ["elw1", "hlf20", "tlf16", "sw2000", "rw1", "mtw1"] },
+    { "label": "Mittelbrand A ohne Personengefährdung",                  "color": "#b30000", "keywords": ["F02", "F 02"], "vehicleOrder": ["elw1", "hlf20", "tlf16", "sw2000", "rw1", "mtw1"] },
+    { "label": "Fahrzeugbrand mit Personengefährdung",                   "color": "#b30000", "keywords": ["F031", "F 031"], "vehicleOrder": ["elw1", "hlf20", "tlf16", "sw2000", "rw1", "mtw1"] },
+    { "label": "Mittelbrand A mit Menschenleben in Gefahr",              "color": "#b30000", "keywords": ["F03", "F 03"], "vehicleOrder": ["elw1", "hlf20", "tlf16", "sw2000", "rw1", "mtw1"] },
+    { "label": "Großbrand",                                              "color": "#b30000", "keywords": ["F04", "F 04"], "vehicleOrder": ["elw1", "hlf20", "tlf16", "sw2000", "rw1", "mtw1"] },
+    { "label": "Waldbrand",                                              "color": "#b30000", "keywords": ["F05", "F 05"], "vehicleOrder": ["elw1", "hlf20", "tlf16", "sw2000", "rw1", "mtw1"] },
+    { "label": "Havarie/Schiffsbrand",                                   "color": "#b30000", "keywords": ["F06", "F 06"], "vehicleOrder": ["elw1", "hlf20", "mtw1", "rtb1", "rw1", "tlf16", "sw2000"] },
+    { "label": "Hilfeleistung klein",                                    "color": "#003d8a", "keywords": ["H01", "H 01"], "vehicleOrder": ["elw1", "hlf20", "rw1"] },
+    { "label": "Hilfeleistung Ölspur",                                   "color": "#003d8a", "keywords": ["H021", "H 021"], "vehicleOrder": ["elw1", "hlf20", "rw1"] },
+    { "label": "Hilfeleistung Drehleiter",                               "color": "#003d8a", "keywords": ["H022", "H 022"], "vehicleOrder": ["elw1", "hlf20", "rw1"] },
+    { "label": "Hilfeleistung mittel",                                   "color": "#003d8a", "keywords": ["H02", "H 02"], "vehicleOrder": ["elw1", "hlf20", "rw1"] },
+    { "label": "Hilfeleistung groß",                                     "color": "#003d8a", "keywords": ["H03", "H 03"], "vehicleOrder": ["elw1", "hlf20", "rw1", "tlf16", "sw2000", "mtw1"] },
+    { "label": "Hilfeleistung Tiernotlage",                              "color": "#003d8a", "keywords": ["H04", "H 04"], "vehicleOrder": ["elw1", "hlf20", "rw1", "tlf16", "sw2000", "mtw1"] },
+    { "label": "Hilfeleistung – Verkehrsunfall mit eingeklemmter Person","color": "#003d8a", "keywords": ["H051", "H 051"], "vehicleOrder": ["elw1", "hlf20", "rw1", "tlf16", "sw2000", "mtw1"] },
+    { "label": "Hilfeleistung Türnotöffnung",                            "color": "#003d8a", "keywords": ["H052", "H 052"], "vehicleOrder": ["elw1", "hlf20", "rw1"] },
+    { "label": "Hilfeleistung mit Personenschaden",                      "color": "#003d8a", "keywords": ["H05", "H 05"], "vehicleOrder": ["elw1", "hlf20", "rw1", "tlf16", "sw2000", "mtw1"] },
+    { "label": "Hilfeleistung mit großem Personenschaden",               "color": "#003d8a", "keywords": ["H06", "H 06"], "vehicleOrder": ["elw1", "hlf20", "rw1", "tlf16", "sw2000", "mtw1"] },
+    { "label": "Hilfeleistung Person im Wasser",                         "color": "#003d8a", "keywords": ["H071", "H 071"], "vehicleOrder": ["elw1", "hlf20", "mtw1", "rtb1", "rw1", "tlf16"] },
+    { "label": "Hilfeleistung KFZ im Wasser / Bootsunfall",              "color": "#003d8a", "keywords": ["H072", "H 072"], "vehicleOrder": ["elw1", "hlf20", "mtw1", "rtb1", "rw1", "tlf16", "sw2000"] },
+    { "label": "Hilfeleistung Wasserrettung",                            "color": "#003d8a", "keywords": ["H07", "H 07"], "vehicleOrder": ["elw1", "hlf20", "mtw1", "rtb1", "rw1", "tlf16"] },
+    { "label": "Hilfeleistung Kanal / Silorettung, Person verschüttet",  "color": "#003d8a", "keywords": ["H081", "H 081"], "vehicleOrder": ["elw1", "hlf20", "rw1", "tlf16", "sw2000", "mtw1"] },
+    { "label": "Hilfeleistung Höhenrettung",                             "color": "#003d8a", "keywords": ["H08", "H 08"], "vehicleOrder": ["elw1", "hlf20", "rw1", "tlf16"] },
+    { "label": "Unterstützung Rettungsdienst",                           "color": "#7a6200", "keywords": ["S011", "S 011"], "vehicleOrder": ["elw1", "hlf20"] },
+    { "label": "Unterstützung",                                          "color": "#7a6200", "keywords": ["S01", "S 01"], "vehicleOrder": ["elw1", "hlf20"] }
+  ]
+}

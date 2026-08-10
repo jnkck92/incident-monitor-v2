@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { config } from './config'
-import { vehicleConfig, findRule, resolveVehicles, type Vehicle } from './vehicles'
+import { findRule, resolveVehicles, type Vehicle, type VehicleConfig } from './vehicles'
 import { fetchLastAlarm, type AlarmResult } from './api/divera'
 import StandbyView from './components/StandbyView.vue'
 import AlarmView from './components/AlarmView.vue'
+import HeaderTest from './components/HeaderTest.vue'
 
 // ----------------------------------------------------------------
 // Reaktiver Zustand
@@ -12,22 +13,38 @@ import AlarmView from './components/AlarmView.vue'
 const alarm = ref<AlarmResult | null>(null)
 const lastQueryTime = ref<string | null>(null)
 const errorMessage = ref<string | null>(null)
+const vehicleConfig = ref<VehicleConfig | null>(null)
+
+// ----------------------------------------------------------------
+// vehicles.json zur Laufzeit laden
+// ----------------------------------------------------------------
+async function loadVehicleConfig() {
+  const res = await fetch('/vehicles.json')
+  if (!res.ok) throw new Error(`vehicles.json konnte nicht geladen werden (${res.status})`)
+  vehicleConfig.value = await res.json() as VehicleConfig
+}
 
 // ----------------------------------------------------------------
 // Stichwort → Fahrzeuge
-// Exakter Match gegen rules; Fallback auf defaultOrder
 // ----------------------------------------------------------------
 const resolvedVehicles = computed<Vehicle[]>(() => {
+  if (!vehicleConfig.value) return []
   const title = alarm.value?.title ?? ''
-  const rule = findRule(title)
-  const ids = rule ? rule.vehicleOrder : vehicleConfig.defaultOrder
-  return resolveVehicles(ids)
+  const rule = findRule(title, vehicleConfig.value)
+  const ids = rule ? rule.vehicleOrder : vehicleConfig.value.defaultOrder
+  return resolveVehicles(ids, vehicleConfig.value)
 })
 
-const matchedRule = computed(() => findRule(alarm.value?.title ?? ''))
+const matchedRule = computed(() =>
+  vehicleConfig.value ? findRule(alarm.value?.title ?? '', vehicleConfig.value) : null
+)
 
 const isAlarmActive = computed<boolean>(
   () => !!alarm.value && alarm.value.closed === false,
+)
+
+const headerColor = computed(() =>
+  matchedRule.value?.color ?? '#b30000'  // Fallback: Rot
 )
 
 // ----------------------------------------------------------------
@@ -50,7 +67,8 @@ async function poll() {
 
 let pollTimer: ReturnType<typeof setInterval>
 
-onMounted(() => {
+onMounted(async () => {
+  await loadVehicleConfig()
   poll()
   pollTimer = setInterval(poll, config.pollIntervalSeconds * 1000)
 })
@@ -59,16 +77,19 @@ onUnmounted(() => clearInterval(pollTimer))
 </script>
 
 <template>
-  <AlarmView
-    v-if="isAlarmActive"
-    :keyword="alarm!.title ?? '–'"
-    :rule-label="matchedRule?.label ?? null"
-    :address="alarm!.address ?? null"
-    :vehicles="resolvedVehicles"
-    :alarm-date="alarm!.date ?? null"
-    :command-contact="vehicleConfig.commandContact"
-    :last-query-time="lastQueryTime"
-  />
+
+<AlarmView
+  v-if="isAlarmActive"
+  :keyword="alarm!.title ?? '–'"
+  :rule-label="matchedRule?.label ?? null"
+  :header-color="headerColor"
+  :address="alarm!.address ?? null"
+  :vehicles="resolvedVehicles"
+  :all-vehicles="vehicleConfig?.vehicles ?? []"
+  :alarm-date="alarm!.date ?? null"
+  :command-contact="vehicleConfig?.commandContact ?? ''"
+  :last-query-time="lastQueryTime"
+/>
   <StandbyView
     v-else
     :department-name="config.departmentName"
@@ -77,7 +98,4 @@ onUnmounted(() => clearInterval(pollTimer))
   />
 </template>
 
-<style scoped>
-/* keine scoped styles nötig – Layout liegt in den Views */
-</style>
-
+<style scoped></style>

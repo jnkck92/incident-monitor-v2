@@ -2,34 +2,20 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import type { Vehicle } from '../vehicles'
 
+import Header from './Header.vue'
+import VehicleTiles from './VehicleTiles.vue'
+
 const props = defineProps<{
   keyword: string
-  /** Ausgeschriebene Bezeichnung der Regel, z.B. "Hilfeleistung mittel" */
   ruleLabel: string | null
-  /** Einsatzadresse aus der API */
   address: string | null
   vehicles: Vehicle[]
+  allVehicles: Vehicle[]
   lastQueryTime: string | null
-  /** Unix-Timestamp (Sekunden) der Alarmierung – aus API-Feld 'date' */
   alarmDate: number | null
-  /** Kontakt für den Hinweis unten, z.B. "ELW 15/11-4" */
   commandContact: string
+  headerColor: string
 }>()
-
-const alarmTime = computed(() => {
-  if (!props.alarmDate) return null
-  return new Date(props.alarmDate * 1000).toLocaleTimeString('de-DE', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  })
-})
-
-const parsedTitle = computed(() => {
-  const [, code, description] = props.keyword.match(/^([A-Za-z]+\s*\d+)\s*-\s*(.+)$/) ?? []
-  if (code && description) return { code: code.trim(), description: description.trim() }
-  return { code: null, description: props.keyword }
-})
 
 const elapsed = ref('')
 
@@ -52,56 +38,19 @@ onUnmounted(() => clearInterval(timer))
 <template>
   <div class="alarm">
 
-    <!-- ── HEADER ─────────────────────────────────────── -->
-    <header class="alarm-header">
-      <div class="header-left">
-        <div class="header-badge" v-if="ruleLabel">{{ ruleLabel }}</div>
-        <div class="header-badge" v-else>EINSATZ</div>
-        <div class="header-keyword">{{ parsedTitle.description }}</div>
-<div class="header-subcode" v-if="parsedTitle.code">{{ parsedTitle.code }}</div>
-        <div class="header-address" v-if="address">{{ address }}</div>
-      </div>
-      <div class="header-right" v-if="alarmTime">
-        <div class="meta-item">
-          <span class="meta-label">Alarmiert</span>
-          <span class="meta-value">{{ alarmTime }} Uhr</span>
-        </div>
-        <div class="meta-divider" />
-        <div class="meta-item">
-          <span class="meta-label">Einsatzdauer</span>
-          <span class="meta-value elapsed">{{ elapsed }}</span>
-        </div>
-      </div>
-    </header>
+    <Header
+      :keyword="keyword"
+      :rule-label="ruleLabel"
+      :address="address"
+      :alarm-date="alarmDate"
+      :header-color="headerColor"
+    />
 
-    <!-- ── FAHRZEUGLISTE ──────────────────────────────── -->
-    <main
-  class="vehicles-section"
-  :style="{ '--vehicle-count': String(Math.max(vehicles.length, 1)) }"
->
-      <template v-if="vehicles.length > 0">
-        <div v-for="v in vehicles" :key="v.id" class="vehicle-row">
-          <span class="vehicle-bullet" />
-          <span class="vehicle-name">{{ v.name }}</span>
-          <span class="vehicle-ric">{{ v.ric }}</span>
-        </div>
-      </template>
-      <div class="no-mapping" v-else>
-        Keine Fahrzeugzuordnung für dieses Stichwort
-      </div>
-    </main>
-
-    <!-- ── HINWEIS ────────────────────────────────────── -->
-    <footer class="alarm-footer">
-      <div class="not-listed">
-        Fahrzeug nicht auf der Liste?
-        &nbsp;→&nbsp;
-        Vor dem Ausrücken beim <span class="phone">{{ commandContact }}</span> nachfragen.
-      </div>
-      <div class="last-query" v-if="lastQueryTime">
-        Letzte Abfrage: {{ lastQueryTime }}
-      </div>
-    </footer>
+    <VehicleTiles
+      :all-vehicles="allVehicles"
+      :vehicles="vehicles"
+      :header-color="headerColor"
+    />
 
   </div>
 </template>
@@ -113,6 +62,7 @@ onUnmounted(() => clearInterval(timer))
   grid-template-rows: auto 1fr auto;
   height: 100vh;
   background: #0d0d0d;
+  animation: alarm-in 0.4s ease-out;
 }
 
 /* ── Header ── */
@@ -120,7 +70,6 @@ onUnmounted(() => clearInterval(timer))
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  background: #b30000;
   padding: 0;
 }
 
@@ -135,8 +84,8 @@ onUnmounted(() => clearInterval(timer))
 .header-badge {
   font-size: clamp(0.75rem, 1.2vw, 1rem);
   font-weight: 800;
-  letter-spacing: 0.3em;
-  color: #ff9999;
+  letter-spacing: 0.2em;
+  color: #ffffff;
   text-transform: uppercase;
 }
 
@@ -148,23 +97,19 @@ onUnmounted(() => clearInterval(timer))
   line-height: 1;
 }
 
-.header-subcode {
-  font-size: clamp(1rem, 2vw, 1.6rem);
-  font-weight: 700;
+.header-address {
+  font-size: clamp(0.8rem, 2.5vw, 2rem);
+  font-weight: 600;
   color: #ffffff;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  opacity: 0.75;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+  margin-top: 0.5rem;
 }
 
-.header-address {
-  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
-  font-weight: 400;
-  color: #ffbbbb;
-  letter-spacing: 0.02em;
-  opacity: 0.85;
-  margin-top: 0.5rem;
+.header-divider {
+  width: 100%;
+  height: 1px;
+  background: #ffffff33;
+  margin: 0.3rem 0;
 }
 
 .header-right {
@@ -174,8 +119,8 @@ onUnmounted(() => clearInterval(timer))
   justify-content: center;
   gap: 0.4rem;
   padding: 1rem 2.5rem 1rem 2rem;
-  background: #99000044;
-  border-left: 1px solid #ff444433;
+  background: #00000033;
+  border-left: 1px solid #ffffff22;
   flex-shrink: 0;
 }
 
@@ -190,22 +135,14 @@ onUnmounted(() => clearInterval(timer))
   font-size: clamp(0.6rem, 1vw, 0.8rem);
   font-weight: 400;
   letter-spacing: 0.15em;
-  color: #ff9999;
+  color: #ffcccc;
   text-transform: uppercase;
-}
-
-.meta-value {
-  font-size: clamp(1.1rem, 2.2vw, 1.8rem);
-  font-weight: 700;
-  color: #ffffff;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
 }
 
 .meta-divider {
   width: 100%;
   height: 1px;
-  background: #ff444433;
+  background: #ffffff22;
   margin: 0.2rem 0;
 }
 
@@ -214,91 +151,11 @@ onUnmounted(() => clearInterval(timer))
   font-weight: 700;
   color: #ffffff;
   font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .elapsed {
   color: #ffe066;
 }
 
-.vehicles-section {
-  padding: clamp(0.6rem, 1.4vh, 1.2rem) clamp(1rem, 2.4vw, 2rem);
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(var(--vehicle-count), minmax(0, 1fr));
-  gap: clamp(0.25rem, 0.6vh, 0.5rem);
-  align-items: stretch;
-}
-
-.vehicle-row {
-  min-height: 0;
-  height: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: clamp(0.5rem, 1.2vw, 1rem);
-  padding: clamp(0.3rem, 0.8vh, 0.7rem) clamp(0.7rem, 1.5vw, 1.2rem);
-  border-left: 6px solid #cc0000;
-  background: #1a1a1a;
-  border-radius: 0.4rem;
-}
-
-.vehicle-bullet {
-  width: clamp(0.35rem, 0.7vh, 0.7rem);
-  height: clamp(0.35rem, 0.7vh, 0.7rem);
-  border-radius: 50%;
-  background: #ff4444;
-  flex-shrink: 0;
-}
-
-.vehicle-name {
-  font-size: clamp(1.2rem, calc(6vh - 0.2rem * var(--vehicle-count)), 4.5rem);
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  color: #ffffff;
-  line-height: 1.05;
-  min-width: 0;
-}
-
-.vehicle-ric {
-  font-size: clamp(0.9rem, calc(2.2vh + 0.1rem), 1.8rem);
-  font-weight: 500;
-  color: #888888;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  flex-shrink: 0;
-}
-
-/* ── Footer ── */
-.alarm-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2.5rem;
-  background: #1a1200;
-  gap: 2rem;
-}
-
-.not-listed {
-  font-size: clamp(1rem, 1.8vw, 1.5rem);
-  font-weight: 600;
-  color: #fbbf24;
-  letter-spacing: 0.02em;
-}
-
-.phone {
-  color: #ffffff;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  background: #7a5500;
-  padding: 0.1em 0.5em;
-  border-radius: 0.3rem;
-}
-
-.last-query {
-  font-size: clamp(0.7rem, 1vw, 0.95rem);
-  color: #444444;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
 </style>
