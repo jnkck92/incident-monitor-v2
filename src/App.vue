@@ -5,7 +5,6 @@ import { findRule, resolveVehicles, type Vehicle, type VehicleConfig } from './v
 import { fetchLastAlarm, type AlarmResult } from './api/divera'
 import StandbyView from './components/StandbyView.vue'
 import AlarmView from './components/AlarmView.vue'
-import HeaderTest from './components/HeaderTest.vue'
 
 // ----------------------------------------------------------------
 // Reaktiver Zustand
