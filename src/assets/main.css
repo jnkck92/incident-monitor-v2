@@ -1,3 +1,30 @@
+:root {
+  --bg-base:           #0d0d0d;
+  --bg-surface:        #0a0a0a;
+  --bg-header:         #111111;
+  --bg-tile:           #141414;
+  --bg-tile-active:    #1c1c1c;
+  --bg-badge:          #1e1e1e;
+  --bg-own-inactive:   #ffffff22;
+
+  --border-tile:       #2a2a2a;
+  --border-faint:      #1e1e1e;
+  --border-header:     #222222;
+  --border-own:        #ffffff33;
+
+  --text-bright:       #ffffff;
+  --text-secondary:    #bbbbbb;
+  --text-dim:          #444444;
+  --text-muted:        #555555;
+  --text-subtle:       #888888;
+  --text-faint:        #484848;
+  --text-own-inactive: #ffffff66;
+
+  --color-ok:          #22c55e;
+  --color-error:       #f87171;
+  --color-elapsed:     #ffe066;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -8,8 +35,8 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0d0d0d;
-  color: #ffffff;
+  background: var(--bg-base);
+  color: var(--text-bright);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }

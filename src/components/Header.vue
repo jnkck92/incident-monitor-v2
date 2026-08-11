@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
+import { useElapsed } from '../composables/useElpased'
 
 const props = defineProps<{
   keyword: string
@@ -8,8 +9,6 @@ const props = defineProps<{
   alarmDate: number | null
   headerColor: string
 }>()
-
-const tileGlow = computed(() => `${props.headerColor}44`)
 
 const parsedTitle = computed(() => {
   const [, code, description] = props.keyword.match(/^([A-Za-z]+\s*\d+)\s*-\s*(.+)$/) ?? []
@@ -22,25 +21,19 @@ const alarmTime = computed(() => {
   return new Date(props.alarmDate * 1000).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 })
 
-const elapsed = ref('')
-function updateElapsed() {
-  if (!props.alarmDate) { elapsed.value = ''; return }
-  const d = Math.floor(Date.now() / 1000 - props.alarmDate)
-  const h = Math.floor(d / 3600), m = Math.floor((d % 3600) / 60), s = d % 60
-  elapsed.value = h > 0
-    ? `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
-    : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
-}
-let timer: ReturnType<typeof setInterval>
-onMounted(() => { updateElapsed(); timer = setInterval(updateElapsed, 1000) })
-onUnmounted(() => clearInterval(timer))
+const { elapsed } = useElapsed(() => props.alarmDate)
+
 </script>
 
 <template>
   <header class="header">
     <div class="accent-bar" />
     <div class="left">
-      <div class="badge">{{ parsedTitle.code }}<span v-if="ruleLabel"> · {{ ruleLabel }}</span></div>
+      <div class="badge">
+        {{ parsedTitle.code }}
+        <span v-if="ruleLabel"> · {{ ruleLabel }}</span>
+        <span v-else-if="parsedTitle.code" class="no-rule-warning">Keine AAO hinterlegt</span>
+      </div>
       <div class="keyword">{{ parsedTitle.description }}</div>
       <div class="address" v-if="address">{{ address }}</div>
     </div>
@@ -52,15 +45,20 @@ onUnmounted(() => clearInterval(timer))
 </template>
 
 <style scoped>
-.header { display: flex; align-items: stretch; background: #111; border-bottom: 1px solid #222; }
+.header { display: flex; align-items: stretch; background: var(--bg-header); border-bottom: 1px solid var(--border-header); }
 .accent-bar { width: 8px; flex-shrink: 0; background: v-bind(headerColor); }
 .left { flex: 1; padding: 1rem 2rem; display: flex; flex-direction: column; justify-content: center; gap: 0.15rem; }
 .badge { font-size: clamp(0.7rem, 1vw, 0.9rem); font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: v-bind(headerColor); }
-.keyword { font-size: clamp(2rem, 5.5vw, 5rem); font-weight: 900; color: #fff; line-height: 1; }
-.address { font-size: clamp(0.8rem, 1.8vw, 1.4rem); color: #888; margin-top: 0.3rem; }
-.right { display: flex; gap: 2.5rem; align-items: center; padding: 1rem 2.5rem; border-left: 1px solid #2a2a2a; }
+.keyword { font-size: clamp(2rem, 5.5vw, 5rem); font-weight: 900; color: var(--text-bright); line-height: 1; }
+.address { font-size: clamp(0.8rem, 1.8vw, 1.4rem); color: var(--text-subtle); margin-top: 0.3rem; }
+.right { display: flex; flex-direction: column; gap: 0.75rem; align-items: center; justify-content: center; padding: 1rem 2.5rem; border-left: 1px solid var(--border-tile); }
 .meta { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
-.label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #555; }
-.val { font-size: clamp(1.1rem, 2vw, 1.8rem); font-weight: 700; font-variant-numeric: tabular-nums; color: #fff; }
-.elapsed { color: #ffe066; }
+.label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+.val { font-size: clamp(1.1rem, 2vw, 1.8rem); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-bright); }
+.elapsed { color: var(--color-elapsed); }
+.no-rule-warning {
+  color: var(--color-elapsed);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
 </style>
