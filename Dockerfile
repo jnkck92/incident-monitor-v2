@@ -1,5 +1,5 @@
 # ---- Build Stage ----
-FROM node:22-slim AS builder
+FROM --platform=linux/arm64 node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # ---- Production Stage ----
-FROM nginx:alpine
+FROM --platform=linux/arm64 nginx:alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
