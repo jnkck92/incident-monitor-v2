@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <div class="v-tile" :class="{ own: isOwn, inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '20' } : {}">
+  <div class="v-tile" :class="{ inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '20' } : {}">
     <span v-if="isOwn" class="v-own-badge">★</span>
     <span class="v-name">{{ vehicle.shortName }}</span>
     <span class="v-ric">{{ vehicle.ric }}</span>
@@ -32,29 +32,23 @@ const props = withDefaults(defineProps<{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
-  padding: clamp(0.4rem, 1.5vh, 1.2rem) clamp(0.6rem, 1.5vw, 1.8rem);
+  gap: 0.8rem;
   border-radius: 0.5rem;
   border: 2px solid var(--border-faint);
   background: var(--bg-header);
-  min-width: clamp(8rem, 16vw, 15rem);
-}
-
-.v-tile.own {
-  opacity: 0.75;
-  border-color: var(--border-own);
+  padding: 0.5rem 0.75rem;
 }
 
 .v-own-badge {
   position: absolute;
   top: 0.3em;
   right: 0.35em;
-  font-size: clamp(0.55rem, 1vw, 0.8rem);
+  font-size: 0.8rem;
   color: var(--text-bright);
 }
 
 .v-name {
-  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  font-size: 6rem;
   font-weight: 900;
   color: var(--text-bright);
 }
@@ -64,7 +58,7 @@ const props = withDefaults(defineProps<{
 }
 
 .v-ric {
-  font-size: clamp(0.9rem, 1.8vw, 1.4rem);
+  font-size: 3rem;
   color: var(--text-bright);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.1em;
@@ -72,11 +66,11 @@ const props = withDefaults(defineProps<{
 
 .v-status {
   margin-top: 0.3rem;
-  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   padding: 0.2em 0.6em; 
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   background: var(--bg-badge);
   line-height: 1;
 }

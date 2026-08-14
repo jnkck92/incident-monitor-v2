@@ -80,8 +80,7 @@ const tileGlow = computed(() => `${props.headerColor}55`)
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(v-bind(gridCols), 1fr);
-  grid-template-rows: repeat(v-bind(gridRows), 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: clamp(0.4rem, 0.8vw, 0.8rem);
   padding: clamp(0.6rem, 1.2vh, 1.2rem) clamp(0.8rem, 1.5vw, 1.5rem);
   overflow: hidden;

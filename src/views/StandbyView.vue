@@ -33,34 +33,40 @@ const vehicles = computed(() => props.vehicles.filter(v => v.group === 'vehicle'
 
     <div class="standby-body">
 
-      <div v-if="persons.length">
-        <div class="vehicle-grid">
-          <VehicleTile 
-            v-for="v in persons" 
-            :key="v.id" 
-            :vehicle="v"
-            :isOwn="v.id === ownVehicleId"
-            :status="vehicleStatuses[v.id]"
-            :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
-            :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
-          />
+      <div class="grids-row">
+
+        <div v-if="persons.length" class="grid-section">
+          <div class="vehicle-grid">
+            <VehicleTile 
+              v-for="v in persons" 
+              :key="v.id" 
+              :vehicle="v"
+              :isOwn="v.id === ownVehicleId"
+              :status="vehicleStatuses[v.id]"
+              :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+              :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+            />
+          </div>
         </div>
+
+        <div v-if="vehicles.length" class="grid-section">
+          <div class="vehicle-grid">
+            <VehicleTile 
+              v-for="v in vehicles" 
+              :key="v.id" 
+              :vehicle="v"
+              :isOwn="v.id === ownVehicleId"
+              :status="vehicleStatuses[v.id]"
+              :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+              :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+            />
+          </div>
+        </div>
+
       </div>
 
-      <div v-if="vehicles.length">
-        <div class="vehicle-grid">
-          <VehicleTile 
-            v-for="v in vehicles" 
-            :key="v.id" 
-            :vehicle="v"
-            :isOwn="v.id === ownVehicleId"
-            :status="vehicleStatuses[v.id]"
-            :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
-            :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
-          />
-        </div>
-      </div>
     </div>
+
   </div>
 </template>
 
@@ -76,17 +82,29 @@ const vehicles = computed(() => props.vehicles.filter(v => v.group === 'vehicle'
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: 2rem;
   padding: 2rem;
 }
 
 .vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.grids-row {
   display: flex;
-  gap: clamp(0.4rem, 1vw, 0.8rem);
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3rem;
+  width: 100%;
+}
+
+.grid-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 </style>

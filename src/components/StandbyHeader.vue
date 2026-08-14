@@ -16,7 +16,7 @@ const { time, date } = useClock()
 <template>
   <div class="standby-header">
     <div class="dept-name">
-      <ConnectionIndicator :connectionOk="connectionOk" />
+      <!--<ConnectionIndicator :connectionOk="connectionOk" />-->
       {{ departmentName }}
     </div>
     <div class="header-right">
@@ -42,9 +42,8 @@ const { time, date } = useClock()
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: clamp(1.2rem, 3vw, 4rem);
+  font-size: 4.5rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-bright);
 }
@@ -54,7 +53,7 @@ const { time, date } = useClock()
 }
 
 .clock {
-  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-size: 4rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--text-bright);
@@ -63,10 +62,9 @@ const { time, date } = useClock()
 }
 
 .clock-date {
-  font-size: clamp(0.8rem, 1.6vw, 1.6rem);
+  font-size: 2rem;
   color: var(--text-bright);
   margin-top: 0.25rem;
-  letter-spacing: 0.08em;
 }
 
 </style>
