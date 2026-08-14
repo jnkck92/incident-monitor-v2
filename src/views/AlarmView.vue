@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import type { Vehicle } from '../vehicles'
 
 import Header from '../components/AlarmHeader.vue'
-import VehicleTiles from '../components/VehicleTiles.vue'
+import Card from '../components/Card.vue'
 
 const props = defineProps<{
   keyword: string
@@ -20,38 +22,73 @@ const props = defineProps<{
   statusShort: Record<number, string>
 }>()
 
+const persons  = computed(() => props.allVehicles.filter(v => v.group === 'person'))
+const vehiclesGroup = computed(() => props.allVehicles.filter(v => v.group !== 'person'))
+
+const activeIds = computed(() => new Set(props.vehicles.map(v => v.id)))
+
 </script>
 
 <template>
-  <div class="alarm">
 
-    <Header
+  <div class="wrapper">
+     <Header
       :keyword="keyword"
       :rule-label="ruleLabel"
       :address="address"
       :alarm-date="alarmDate"
       :header-color="headerColor"
     />
-
-    <VehicleTiles
-      :all-vehicles="allVehicles"
-      :vehicles="vehicles"
-      :header-color="headerColor"
-      :own-vehicle-id="ownVehicleId"
-      :vehicle-statuses="vehicleStatuses"
-      :status-colors="statusColors"
-      :status-short="statusShort"
-    />
-
-    <footer class="alarm-footer">
-      Falls Ihr Fahrzeug nicht alarmiert ist — vor dem Ausrücken bei
-      <span class="alarm-footer-contact">{{ commandContact }}</span> nachfragen.
-    </footer>
-
+    <div class="card-wrapper">
+      <div class="card-container">
+        <Card 
+          v-for="v in persons" 
+          :key="v.id" 
+          :vehicle="v"
+          :isOwn="v.id === ownVehicleId"
+          :status="vehicleStatuses[v.id]"
+          :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+          :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+        />
+      </div>
+      <div class="card-container">
+        <Card 
+          v-for="v in vehiclesGroup"
+          :key="v.id" 
+          :vehicle="v"
+          :isOwn="v.id === ownVehicleId"
+          :isActive="activeIds.has(v.id)"
+          :status="vehicleStatuses[v.id]"
+          :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+          :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+        />
+      </div>
+    </div>
   </div>
+
 </template>
 
 <style scoped>
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.card-wrapper {
+  display: grid;
+  padding: 1rem;
+  gap: 1rem;
+  flex: 1;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
 
 .alarm {
   display: grid;
