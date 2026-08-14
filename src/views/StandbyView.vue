@@ -82,14 +82,14 @@ const vehicles = computed(() => props.vehicles.filter(v => v.group === 'vehicle'
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 2rem;
+  gap: clamp(0.5rem, 1.5vh, 2rem);      /* war: 2rem */
+  padding: clamp(0.5rem, 1.5vw, 2rem);
 }
 
 .vehicle-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(8rem, 18vw, 16rem), 1fr));
+  gap: clamp(0.5rem, 1vw, 1rem);
   width: 100%;
 }
 
@@ -97,7 +97,7 @@ const vehicles = computed(() => props.vehicles.filter(v => v.group === 'vehicle'
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 3rem;
+  gap: clamp(1rem, 2.5vh, 3rem);        /* war: 3rem */
   width: 100%;
 }
 
