@@ -5,8 +5,8 @@ export function useVehicleConfig() {
   const vehicleConfig = ref<VehicleConfig | null>(null)
 
   async function load() {
-    const res = await fetch('/vehicles.json')
-    if (!res.ok) throw new Error(`vehicles.json konnte nicht geladen werden (${res.status})`)
+    const res = await fetch('/data.json')
+    if (!res.ok) throw new Error(`data.json konnte nicht geladen werden (${res.status})`)
     vehicleConfig.value = await res.json() as VehicleConfig
   }
 

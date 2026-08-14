@@ -11,6 +11,7 @@ export interface Vehicle {
   type: string
   ric: string
   diveraId?: number
+  group?: 'person' | 'vehicle'
 }
 
 export interface Rule {

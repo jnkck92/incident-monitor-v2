@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Vehicle } from '../vehicles'
 
-import Header from '../components/Header.vue'
+import Header from '../components/AlarmHeader.vue'
 import VehicleTiles from '../components/VehicleTiles.vue'
 
 const props = defineProps<{
@@ -65,7 +65,7 @@ const props = defineProps<{
   padding: 0.5rem clamp(0.8rem, 1.5vw, 1.5rem);
   border-top: 1px solid var(--border-faint);
   background: var(--bg-surface);
-  font-size: clamp(0.65rem, 1.1vw, 0.9rem);
+  font-size: clamp(0.65rem, 2vw, 2.5rem);
   color: var(--text-faint);
   letter-spacing: 0.03em;
   text-align: center;

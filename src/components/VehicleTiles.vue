@@ -1,5 +1,9 @@
 <script setup lang="ts">
+
 import { computed } from 'vue'
+
+import VehicleTile from './VehicleTile.vue'
+
 import type { Vehicle } from '../vehicles'
 
 const props = defineProps<{
@@ -12,46 +16,52 @@ const props = defineProps<{
   statusShort: Record<number, string>
 }>()
 
+const persons  = computed(() => props.allVehicles.filter(v => v.group === 'person'))
+const vehiclesGroup = computed(() => props.allVehicles.filter(v => v.group !== 'person'))
+
+
 const activeIds = computed(() => new Set(props.vehicles.map(v => v.id)))
 
-const vehiclePosition = computed(() => {
-  const map = new Map<string, number>()
-  props.vehicles.forEach((v, i) => map.set(v.id, i + 1))
-  return map
-})
-
 const gridCols = computed(() => {
-  const n = props.allVehicles.length || 1
+  const n = vehiclesGroup.value.length || 1
   return Math.min(n, Math.ceil(Math.sqrt(n * (16 / 9))))
 })
 const gridRows = computed(() => Math.ceil(props.allVehicles.length / gridCols.value))
 
-const tileFontSize = computed(() =>
-  `clamp(2.5rem, ${(32 / gridCols.value).toFixed(1)}vw, 8rem)`
-)
+const tileFontSize = computed(() => {
+  const vwVal = (32 / gridCols.value).toFixed(1)
+  const vhVal = (18 / gridRows.value).toFixed(1)
+  return `clamp(1rem, min(${vwVal}vw, ${vhVal}vh), 8rem)`
+})
 const tileGlow = computed(() => `${props.headerColor}55`)
 </script>
 
 <template>
   <div class="vehicles-wrapper">
+
+    <div v-if="persons.length" class="persons-row">
+      <VehicleTile 
+        v-for="v in persons" 
+        :key="v.id" 
+        :vehicle="v"
+        :isOwn="v.id === ownVehicleId"
+        :status="vehicleStatuses[v.id]"
+        :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+        :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+      />
+  </div>
+
     <main class="vehicles-section">
-      <div
-        v-for="v in allVehicles"
-        :key="v.id"
-        class="vehicle-tile"
-        :class="{ active: activeIds.has(v.id), own: v.id === ownVehicleId }"
-      >
-        <span v-if="vehiclePosition.has(v.id)" class="tile-position">
-          {{ vehiclePosition.get(v.id) }}
-        </span>
-        <span class="tile-name">{{ v.shortName }}</span>
-        <span class="tile-ric">{{ v.ric }}</span>
-        <span
-          v-if="v.id in vehicleStatuses"
-          class="tile-status-label"
-          :style="{ color: statusColors[vehicleStatuses[v.id]!] }"
-        >{{ statusShort[vehicleStatuses[v.id]!] }}</span>
-      </div>
+      <VehicleTile 
+        v-for="v in vehiclesGroup" 
+        :key="v.id" 
+        :vehicle="v"
+        :isOwn="v.id === ownVehicleId"
+        :isActive="activeIds.has(v.id)"
+        :status="vehicleStatuses[v.id]"
+        :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+        :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+      />
     </main>
   </div>
 </template>
@@ -62,6 +72,7 @@ const tileGlow = computed(() => `${props.headerColor}55`)
   flex-direction: column;
   min-height: 0;
   height: 100%;
+  gap: 2rem;
 }
 
 .vehicles-section {
@@ -184,6 +195,19 @@ const tileGlow = computed(() => `${props.headerColor}55`)
   background: var(--bg-badge);
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
+}
+
+.persons-row {
+  display: flex;
+  gap: clamp(0.4rem, 0.8vw, 0.8rem);
+  padding: clamp(0.4rem, 0.8vh, 0.8rem) clamp(0.8rem, 1.5vw, 1.5rem) 0;
+  flex-shrink: 0;
+}
+
+.person-tile {
+  flex: 0 0 auto;
+  min-width: clamp(6rem, 10vw, 10rem);
+  /* etwas kleiner als Fahrzeug-Tiles */
 }
 
 </style>

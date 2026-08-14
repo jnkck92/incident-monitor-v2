@@ -2,7 +2,6 @@
 import { computed, onMounted } from 'vue'
 import { config } from './config'
 import { findRule, resolveVehicles, orderedVehiclesForDisplay, type Vehicle } from './vehicles'
-import { STATUS_COLOR, STATUS_SHORT } from './api/divera'
 import { useVehicleConfig } from './composables/useVehicleConfig'
 import { useAlarmLog } from './composables/useAlarmLog'
 import { useAlarmPolling } from './composables/useAlarmPolling'
@@ -41,13 +40,13 @@ const { statuses: vehicleStatuses } = useVehicleStatus(
 
 const resolvedStatusColors = computed(() => {
   const cfg = vehicleConfig.value?.statusColors
-  if (!cfg) return STATUS_COLOR
+  if (!cfg) return {}
   return Object.fromEntries(Object.entries(cfg).map(([k, v]) => [Number(k), v]))
 })
 
 const resolvedStatusShort = computed(() => {
   const cfg = vehicleConfig.value?.statusShort
-  if (!cfg) return STATUS_SHORT
+  if (!cfg) return {}
   return Object.fromEntries(Object.entries(cfg).map(([k, v]) => [Number(k), v]))
 })
 

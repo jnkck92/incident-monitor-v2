@@ -1,9 +1,13 @@
 {
-  "elw1":   4,
-  "hlf20":  3,
-  "tlf16":  2,
-  "rw1":    2,
-  "sw2000": 2,
-  "mtw1":   2,
-  "rtb1":   6
+  "elw1": 4,
+  "hlf20": 3,
+  "tlf16": 2,
+  "rw1": 2,
+  "sw2000": 1,
+  "mtw1": 2,
+  "rtb1": 6,
+  "ortsbm": 1,
+  "stellvortsbm": 1,
+  "zugfuehrer": 1,
+  "stellvzugfuehrer": 1
 }
