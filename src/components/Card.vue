@@ -1,4 +1,4 @@
-<script setup lang="ts">
+hanges<script setup lang="ts">
 import type { Vehicle } from '../vehicles'
 
 const props = withDefaults(defineProps<{
@@ -14,8 +14,7 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <div class="v-tile" :class="{ inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '20' } : {}">
-    <span v-if="isOwn" class="v-own-badge">★</span>
+  <div class="card" :class="{ inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '20' } : {}">
     <span class="v-name">{{ vehicle.shortName }}</span>
     <span class="v-ric">{{ vehicle.ric }}</span>
     <span v-if="status !== undefined" class="v-status" :style="{ color: statusColor }">
@@ -26,6 +25,23 @@ const props = withDefaults(defineProps<{
 
 <style scoped>
 
+.card {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--border-faint);
+}
+
+.card.inactive {
+  opacity: 0.2;
+  filter: grayscale(60%);
+}
+
+/*
 .v-tile {
   position: relative;
   display: flex;
@@ -79,5 +95,6 @@ const props = withDefaults(defineProps<{
   opacity: 0.2;
   filter: grayscale(60%);
 }
+  */
 
 </style>

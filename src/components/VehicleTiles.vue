@@ -2,7 +2,7 @@
 
 import { computed } from 'vue'
 
-import VehicleTile from './VehicleTile.vue'
+import VehicleTile from './Card.vue'
 
 import type { Vehicle } from '../vehicles'
 
