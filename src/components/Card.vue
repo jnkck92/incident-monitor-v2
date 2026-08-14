@@ -26,7 +26,6 @@ const props = withDefaults(defineProps<{
 <style scoped>
 
 .card {
-  padding: 0.6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,7 +46,7 @@ const props = withDefaults(defineProps<{
 }
 
 .status {
-  font-size: 1rem;
+  font-size: 1.5rem;
   padding: 0.4em 0.6em 0.4em 0.6em; 
   border-radius: var(--border-radius);
   background: var(--bg-badge);
