@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <div class="v-tile" :class="{ own: isOwn, inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor } : {}">
+  <div class="v-tile" :class="{ own: isOwn, inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '20' } : {}">
     <span v-if="isOwn" class="v-own-badge">★</span>
     <span class="v-name">{{ vehicle.shortName }}</span>
     <span class="v-ric">{{ vehicle.ric }}</span>

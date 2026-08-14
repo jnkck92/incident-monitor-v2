@@ -48,7 +48,7 @@ const { elapsed } = useElapsed(() => props.alarmDate)
 .header { 
   display: flex; 
   align-items: stretch; 
-  background: var(--bg-header); 
+  background: v-bind(headerColor + '20');
   border-bottom: 1px solid var(--border-header); 
   border-top: 3px solid v-bind(headerColor);
 }

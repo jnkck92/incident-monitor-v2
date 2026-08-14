@@ -73,6 +73,7 @@ const tileGlow = computed(() => `${props.headerColor}55`)
   min-height: 0;
   height: 100%;
   gap: 2rem;
+  padding: 0.5rem 0;
 }
 
 .vehicles-section {
