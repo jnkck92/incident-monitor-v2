@@ -27,29 +27,31 @@ const vehicles = computed(() => props.vehicles.filter(v => v.group === 'vehicle'
 </script>
 
 <template>
-
   <div class="wrapper">
-    <div class="card-container">
-      <Card 
-        v-for="v in persons" 
-        :key="v.id" 
-        :vehicle="v"
-        :isOwn="v.id === ownVehicleId"
-        :status="vehicleStatuses[v.id]"
-        :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
-        :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
-      />
-    </div>
-    <div class="card-container">
-      <Card 
-        v-for="v in vehicles"
-        :key="v.id" 
-        :vehicle="v"
-        :isOwn="v.id === ownVehicleId"
-        :status="vehicleStatuses[v.id]"
-        :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
-        :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
-      />
+    <StandbyHeader :departmentName="departmentName" :connectionOk="connectionOk"/>
+    <div class="card-wrapper">
+      <div class="card-container">
+        <Card 
+          v-for="v in persons" 
+          :key="v.id" 
+          :vehicle="v"
+          :isOwn="v.id === ownVehicleId"
+          :status="vehicleStatuses[v.id]"
+          :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+          :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+        />
+      </div>
+      <div class="card-container">
+        <Card 
+          v-for="v in vehicles"
+          :key="v.id" 
+          :vehicle="v"
+          :isOwn="v.id === ownVehicleId"
+          :status="vehicleStatuses[v.id]"
+          :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+          :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+        />
+      </div>
     </div>
   </div>
 
@@ -105,6 +107,10 @@ const vehicles = computed(() => props.vehicles.filter(v => v.group === 'vehicle'
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+}
+
+.card-wrapper {
+  display: grid;
   padding: 1rem;
   gap: 1rem;
 }

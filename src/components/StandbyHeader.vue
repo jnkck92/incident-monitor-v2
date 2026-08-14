@@ -14,12 +14,12 @@ const { time, date } = useClock()
 </script>
 
 <template>
-  <div class="standby-header">
-    <div class="dept-name">
+  <div class="header-wrapper">
+    <div class="name">
       <!--<ConnectionIndicator :connectionOk="connectionOk" />-->
       {{ departmentName }}
     </div>
-    <div class="header-right">
+    <div class="clock-wrapper">
       <div class="clock">{{ time }}</div>
       <div class="clock-date">{{ date }}</div>
     </div>
@@ -28,6 +28,35 @@ const { time, date } = useClock()
 
 <style scoped>
 
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 3rem;
+  border-bottom: 1px solid var(--border-tile);
+}
+
+.name {
+  font-size: 4rem;
+  text-transform: uppercase;
+  color: var(--text-bright);
+}
+
+.clock-wrapper {
+  text-align: right;
+}
+
+.clock {
+  font-size: 4rem;
+  color: var(--text-bright);
+}
+
+.clock-date {
+  font-size: 2rem;
+  color: var(--text-bright);
+}
+
+/*
 .standby-header {
   display: flex;
   align-items: center;
@@ -65,6 +94,6 @@ const { time, date } = useClock()
   font-size: 2rem;
   color: var(--text-bright);
   margin-top: 0.25rem;
-}
+}*/
 
 </style>
