@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <div class="card" :class="{ inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '20' } : {}">
+  <div class="card" :class="{ inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '40' } : {}">
     <span class="name">{{ vehicle.shortName }}</span>
     <span class="ric">{{ vehicle.ric }}</span>
     <span v-if="status !== undefined" class="status" :style="{ color: statusColor }">
