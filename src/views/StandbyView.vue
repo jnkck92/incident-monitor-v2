@@ -113,6 +113,7 @@ const vehicles = computed(() => props.vehicles.filter(v => v.group === 'vehicle'
   display: grid;
   padding: 1rem;
   gap: 1rem;
+  flex: 1;
 }
 
 .card-container {
