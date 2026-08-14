@@ -1,7 +1,5 @@
 <script setup lang="ts">
 
-import ConnectionIndicator from './ConnectionIndicator.vue'
-
 import { useClock } from '../composables/useClock'
 
 const props = defineProps<{
