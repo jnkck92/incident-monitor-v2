@@ -15,9 +15,9 @@ const props = withDefaults(defineProps<{
 
 <template>
   <div class="card" :class="{ inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '20' } : {}">
-    <span class="v-name">{{ vehicle.shortName }}</span>
-    <span class="v-ric">{{ vehicle.ric }}</span>
-    <span v-if="status !== undefined" class="v-status" :style="{ color: statusColor }">
+    <span class="name">{{ vehicle.shortName }}</span>
+    <span class="ric">{{ vehicle.ric }}</span>
+    <span v-if="status !== undefined" class="status" :style="{ color: statusColor }">
       {{ statusShort }}
     </span>
   </div>
@@ -32,8 +32,25 @@ const props = withDefaults(defineProps<{
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius);
   border: 2px solid var(--border-faint);
+}
+
+.name {
+  font-size: 6rem;
+  color: var(--text-bright);
+}
+
+.ric {
+  font-size: 3rem;
+  color: var(--text-bright);
+}
+
+.status {
+  font-size: 1.5rem;
+  padding: 0.4em 0.6em 0.4em 0.6em; 
+  border-radius: var(--border-radius);
+  background: var(--bg-badge);
 }
 
 .card.inactive {

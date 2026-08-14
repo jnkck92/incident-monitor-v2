@@ -23,6 +23,9 @@
   --color-ok:          #22c55e;
   --color-error:       #f87171;
   --color-elapsed:     #ffe066;
+
+  --border-radius: 0.5rem;
+
 }
 
 *, *::before, *::after {
