@@ -67,6 +67,7 @@ const props = withDefaults(defineProps<{
   font-size: clamp(0.9rem, 1.8vw, 1.4rem);
   color: var(--text-bright);
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
 }
 
 .v-status {

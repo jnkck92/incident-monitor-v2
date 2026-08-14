@@ -66,14 +66,14 @@ const props = defineProps<{
   border-top: 1px solid var(--border-faint);
   background: var(--bg-surface);
   font-size: clamp(0.65rem, 2vw, 2.5rem);
-  color: var(--text-faint);
+  color: var(--text-bright);
   letter-spacing: 0.03em;
   text-align: center;
 }
 
 .alarm-footer-contact {
   font-weight: 700;
-  color: var(--text-subtle);
+  color: var(--text-bright);
 }
 
 </style>
