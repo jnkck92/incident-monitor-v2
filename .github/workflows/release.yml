@@ -88,7 +88,7 @@ jobs:
           console.log('Next snapshot: ' + nextSnapshotVersion);
           NODE
 
-      - name: Set Release Version in [package.json](http://_vscodecontentref_/2)
+      - name: Set Release Version in package.json
         run: npm version ${{ steps.versions.outputs.release_version }} --no-git-tag-version
 
       - name: Install dependencies
@@ -126,7 +126,7 @@ jobs:
 
       - name: Commit Release Version and create Tag
         run: |
-          git add [package.json](http://_vscodecontentref_/3)
+          git add package.json
           git commit -m "Release version ${{ steps.versions.outputs.release_version }}"
           git tag -a v${{ steps.versions.outputs.release_version }} -m "Release v${{ steps.versions.outputs.release_version }}"
 
@@ -135,7 +135,7 @@ jobs:
 
       - name: Commit next Version
         run: |
-          git add [package.json](http://_vscodecontentref_/4)
+          git add package.json
           git commit -m "Prepare next development version ${{ steps.versions.outputs.next_snapshot_version }}"
 
       - name: Push commits and tag
