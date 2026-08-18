@@ -23,7 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Lockfiles anderer Package Manager (Projekt nutzt pnpm)
-package-lock.json
 yarn.lock
 
 # Editor directories and files
