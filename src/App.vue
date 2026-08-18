@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+/*import { computed, onMounted } from 'vue'
 import { config } from './config'
 import { findRule, resolveVehicles, orderedVehiclesForDisplay, type Vehicle } from './vehicles'
 import { useVehicleConfig } from './composables/useVehicleConfig'
@@ -8,8 +8,12 @@ import { useAlarmPolling } from './composables/useAlarmPolling'
 import { useVehicleStatus } from './composables/useVehicleStatus'
 import StandbyView from './views/StandbyView.vue'
 import AlarmView from './views/AlarmView.vue'
-import ClosingView from './views/ClosingView.vue'
+import ClosingView from './views/ClosingView.vue'*/
+import { useWindowSize } from './composables/useWindowSize'
 
+const { width, height } = useWindowSize();
+
+/*
 const ownVehicleId = import.meta.env.VITE_OWN_VEHICLE_ID ?? ''
 
 const { vehicleConfig } = useVehicleConfig()
@@ -53,10 +57,17 @@ const resolvedStatusShort = computed(() => {
 onMounted(() => {
   navigator.wakeLock?.request('screen').catch(() => {})
 })
+*/
 </script>
 
 <template>
 
+  <div>
+    <p>Breite: {{ width }}px</p>
+    <p>Höhe: {{ height }}px</p>
+  </div>
+
+  <!--
   <Transition name="view" mode="out-in">
 
     <ClosingView
@@ -100,7 +111,7 @@ onMounted(() => {
     />
 
   </Transition>
-
+  -->
 </template>
 
 <style scoped>
