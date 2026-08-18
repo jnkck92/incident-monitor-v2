@@ -3,12 +3,15 @@ name: Build & Release
 on:
   workflow_dispatch:
     inputs:
-      release_version:
-        description: 'Release Version (z.B. 1.0.0)'
+      bump_type:
+        description: Welche Version soll erhöht werden?
         required: true
-      next_version:
-        description: 'Nächste Entwicklungsversion (z.B. 1.1.0-SNAPSHOT)'
-        required: true
+        type: choice
+        default: patch
+        options:
+          - major
+          - minor
+          - patch
 
 jobs:
   release:
@@ -28,27 +31,80 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # ── Version in package.json setzen ───────────────────────────
-      - name: Set Release Version in package.json
-        run: npm version ${{ github.event.inputs.release_version }} --no-git-tag-version
+      - name: Calculate release and next snapshot versions
+        id: versions
+        env:
+          BUMP_TYPE: ${{ github.event.inputs.bump_type }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
 
-      # ── Build ────────────────────────────────────────────────────
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const bumpType = process.env.BUMP_TYPE;
+          const currentRaw = String(pkg.version || '').trim();
+
+          const isSnapshot = /-SNAPSHOT$/i.test(currentRaw);
+          const currentBase = currentRaw.replace(/-SNAPSHOT$/i, '');
+          const match = currentBase.match(/^(\d+)\.(\d+)\.(\d+)$/);
+
+          if (!match) {
+            throw new Error('Unsupported version format in package.json: ' + currentRaw);
+          }
+
+          function bump(version, type) {
+            const m = version.match(/^(\d+)\.(\d+)\.(\d+)$/);
+            let major = Number(m[1]);
+            let minor = Number(m[2]);
+            let patch = Number(m[3]);
+
+            if (type === 'major') {
+              major += 1;
+              minor = 0;
+              patch = 0;
+            } else if (type === 'minor') {
+              minor += 1;
+              patch = 0;
+            } else {
+              patch += 1;
+            }
+
+            return major + '.' + minor + '.' + patch;
+          }
+
+          const releaseVersion = isSnapshot ? currentBase : bump(currentBase, bumpType);
+          const nextSnapshotVersion = bump(releaseVersion, bumpType) + '-SNAPSHOT';
+
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'release_version=' + releaseVersion + '\n');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'next_snapshot_version=' + nextSnapshotVersion + '\n');
+
+          console.log('Current version: ' + currentRaw);
+          console.log('Release version: ' + releaseVersion);
+          console.log('Next snapshot: ' + nextSnapshotVersion);
+          NODE
+
+      - name: Set Release Version in [package.json](http://_vscodecontentref_/2)
+        run: npm version ${{ steps.versions.outputs.release_version }} --no-git-tag-version
+
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "No package-lock.json found, using npm install"
+            npm install
+          fi
 
       - name: Build
         run: npm run build
         env:
-            VITE_DIVERA_API_KEY: ${{ secrets.VITE_DIVERA_API_KEY }}
+          VITE_DIVERA_API_KEY: ${{ secrets.VITE_DIVERA_API_KEY }}
 
-      # ── Docker ───────────────────────────────────────────────────
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -61,41 +117,37 @@ jobs:
         with:
           context: .
           push: true
-          provenance: false 
+          provenance: false
           build-args: |
             VITE_DIVERA_API_KEY=${{ secrets.VITE_DIVERA_API_KEY }}
           tags: |
-            ghcr.io/${{ github.repository }}:v${{ github.event.inputs.release_version }}
+            ghcr.io/${{ github.repository }}:v${{ steps.versions.outputs.release_version }}
             ghcr.io/${{ github.repository }}:latest
 
-      # ── Git: Release Version committen + Tag setzen ──────────────
-      - name: Commit Release Version & create Tag
+      - name: Commit Release Version and create Tag
         run: |
-          git add package.json
-          git commit -m "Release version ${{ github.event.inputs.release_version }}"
-          git tag -a v${{ github.event.inputs.release_version }} -m "Release v${{ github.event.inputs.release_version }}"
+          git add [package.json](http://_vscodecontentref_/3)
+          git commit -m "Release version ${{ steps.versions.outputs.release_version }}"
+          git tag -a v${{ steps.versions.outputs.release_version }} -m "Release v${{ steps.versions.outputs.release_version }}"
 
-      # ── Nächste Version setzen ────────────────────────────────────
-      - name: Set next Version in package.json
-        run: npm version ${{ github.event.inputs.next_version }} --no-git-tag-version
+      - name: Set next snapshot Version in package.json
+        run: npm version ${{ steps.versions.outputs.next_snapshot_version }} --no-git-tag-version
 
       - name: Commit next Version
         run: |
-          git add package.json
-          git commit -m "Prepare next development version ${{ github.event.inputs.next_version }}"
+          git add [package.json](http://_vscodecontentref_/4)
+          git commit -m "Prepare next development version ${{ steps.versions.outputs.next_snapshot_version }}"
 
-      # ── Push ─────────────────────────────────────────────────────
       - name: Push commits and tag
         run: |
-          git push origin main
-          git push origin v${{ github.event.inputs.release_version }}
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin v${{ steps.versions.outputs.release_version }}
 
-      # ── GitHub Release ────────────────────────────────────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ github.event.inputs.release_version }}
-          name: Release v${{ github.event.inputs.release_version }}
+          tag_name: v${{ steps.versions.outputs.release_version }}
+          name: Release v${{ steps.versions.outputs.release_version }}
           generate_release_notes: true
           body: |
-            Docker Image: `ghcr.io/${{ github.repository }}:v${{ github.event.inputs.release_version }}`
+            Docker Image: ghcr.io/${{ github.repository }}:v${{ steps.versions.outputs.release_version }}
