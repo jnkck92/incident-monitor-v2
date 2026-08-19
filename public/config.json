@@ -1,0 +1,7 @@
+{
+  "diveraBaseUrl": "https://app.divera247.com",
+  "diveraApiKey": "",
+  "pollIntervalSeconds": 30,
+  "departmentName": "Feuerwehr",
+  "ownVehicleId": ""
+}

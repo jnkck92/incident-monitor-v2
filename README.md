@@ -1,42 +1,105 @@
-# incident-monitor-v2
+# Raspberry Pi Setup – Incident Monitor
 
-This template should help get you started developing with Vue 3 in Vite.
+Anleitung zur Einrichtung des Incident Monitors auf einem Raspberry Pi mit Raspberry Pi OS (Wayland/Labwc).
 
-## Recommended IDE Setup
+## Voraussetzungen
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Raspberry Pi mit Raspberry Pi OS
+- Internetzugang
 
-## Recommended Browser Setup
+---
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## 1. Docker installieren
 
-## Type Support for `.vue` Imports in TS
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl ca-certificates
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
 
-## Customize configuration
+sudo usermod -aG docker $USER
+newgrp docker
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+sudo apt install -y docker-compose-plugin
+docker compose version
 
-## Project Setup
-
-```sh
-npm install
+sudo systemctl enable docker
+sudo systemctl start docker
 ```
 
-### Compile and Hot-Reload for Development
+---
 
-```sh
-npm run dev
+## 2. Mauszeiger ausblenden
+
+```bash
+sudo apt update && sudo apt install wtype
 ```
 
-### Type-Check, Compile and Minify for Production
+Datei `~/.config/labwc/rc.xml` anlegen:
 
-```sh
-npm run build
+```xml
+<keyboard>
+  <default />
+  <keybind key="A-S-m">
+    <action name="HideCursor" />
+    <action name="WarpCursor" x="-1" y="-1" />
+  </keybind>
+</keyboard>
+```
+
+---
+
+## 3. Autostart konfigurieren
+
+Datei `~/.config/labwc/autostart` bearbeiten/anlegen und folgenden Inhalt hinzufügen:
+
+```bash
+wtype -M alt -M shift m -m alt -m shift &
+chromium --password-store=basic --noerrdialogs --disable-infobars --no-first-run --kiosk --incognito http://localhost:8080
+```
+
+---
+
+## 4. Incident Monitor starten
+
+`docker-compose.yml` mit folgendem Inhalt anlegen:
+
+```yaml
+services:
+  incident-monitor:
+    image: ghcr.io/jnkck92/incident-monitor-v2:latest
+    container_name: incident-monitor
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+```
+
+```bash
+docker compose up -d
+```
+
+---
+
+## Nützliche Befehle
+
+```bash
+# Logs anzeigen
+docker logs incident-monitor
+
+# Logs live verfolgen
+docker logs -f incident-monitor
+
+# Stoppen
+docker compose down
+
+# Auf neue Version updaten
+docker compose pull
+docker compose up -d
 ```

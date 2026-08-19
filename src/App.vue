@@ -10,7 +10,7 @@ import StandbyView from './views/StandbyView.vue'
 import AlarmView from './views/AlarmView.vue'
 import ClosingView from './views/ClosingView.vue'
 
-const ownVehicleId = import.meta.env.VITE_OWN_VEHICLE_ID ?? ''
+const ownVehicleId = config.ownVehicleId
 
 const { vehicleConfig } = useVehicleConfig()
 const { lastAlarm, record } = useAlarmLog()
