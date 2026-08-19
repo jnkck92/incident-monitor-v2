@@ -73,12 +73,26 @@ services:
     restart: unless-stopped
     ports:
       - "8080:80"
+    volumes:
+      - ./config.json:/usr/share/nginx/html/config.json:ro
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
+```
+
+`config.json` anlegen mit fiolgendem Inhalt
+
+```json
+{
+  "diveraBaseUrl": "https://app.divera247.com",
+  "diveraApiKey": "DEIN_ECHTER_KEY",
+  "pollIntervalSeconds": 30,
+  "departmentName": "Feuerwehr Musterstadt",
+  "ownVehicleId": "12345"
+}
 ```
 
 ```bash
