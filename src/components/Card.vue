@@ -1,7 +1,7 @@
-hanges<script setup lang="ts">
+<script setup lang="ts">
 import type { Vehicle } from '../vehicles'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   vehicle: Vehicle
   isOwn: boolean
   isActive?: boolean
@@ -14,9 +14,17 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <div class="card" :class="{ inactive: !isActive }" :style="status !== undefined ? { borderColor: statusColor, background: statusColor + '40' } : {}">
-    <span class="name">{{ vehicle.shortName }}</span>
-    <span class="ric">{{ vehicle.ric }}</span>
+  <div
+    class="card"
+    :class="{ inactive: !isActive }"
+    :style="status !== undefined
+  ? { borderLeftColor: statusColor, borderLeftWidth: '4px' }
+  : { borderLeftColor: 'transparent', borderLeftWidth: '4px' }"
+  >
+    <div class="info">
+      <span class="name">{{ vehicle.shortName }}</span>
+      <span class="ric">{{ vehicle.ric }}</span>
+    </div>
     <span v-if="status !== undefined" class="status" :style="{ color: statusColor }">
       {{ statusShort }}
     </span>
@@ -24,93 +32,56 @@ const props = withDefaults(defineProps<{
 </template>
 
 <style scoped>
-
 .card {
+  container-type: inline-size;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: space-between;
+  flex: 1;
+  padding: clamp(0.4rem, 1.5vh, 1rem) clamp(0.8rem, 2vw, 2rem);
   border-radius: var(--border-radius);
   border: 2px solid var(--border-faint);
+  overflow: hidden;
+  background-color: var(--bg-tile);
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 18px 18px;
+   border: 1px solid var(--border-faint);
+  border-left-width: 4px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  min-width: 0;
 }
 
 .name {
-  font-size: 5rem;
+  font-size: clamp(1rem, 5cqw, 999rem);
+  font-weight: 700;
   color: var(--text-bright);
+  white-space: nowrap;
 }
 
 .ric {
-  font-size: 2rem;
-  color: var(--text-bright);
+  font-family: 'Courier New', 'Consolas', monospace;
+  letter-spacing: 0.05em;
+  font-size: clamp(0.5rem, 2cqw, 999rem);
+  color: var(--text-secondary);
 }
 
 .status {
-  font-size: 1.5rem;
-  padding: 0.4em 0.6em 0.4em 0.6em; 
-  border-radius: var(--border-radius);
-  background: var(--bg-badge);
+  font-family: 'Courier New', monospace;
+  font-size: clamp(0.7rem, 2cqw, 999rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+  /* kein background, kein padding */
 }
 
 .card.inactive {
   opacity: 0.2;
   filter: grayscale(60%);
 }
-
-/*
-.v-tile {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  border-radius: 0.5rem;
-  border: 2px solid var(--border-faint);
-  background: var(--bg-header);
-  padding: 0.5rem 0.75rem;
-}
-
-.v-own-badge {
-  position: absolute;
-  top: 0.3em;
-  right: 0.35em;
-  font-size: 0.8rem;
-  color: var(--text-bright);
-}
-
-.v-name {
-  font-size: 6rem;
-  font-weight: 900;
-  color: var(--text-bright);
-}
-
-.v-tile.own .v-name {
-  color: var(--text-bright);
-}
-
-.v-ric {
-  font-size: 3rem;
-  color: var(--text-bright);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.1em;
-}
-
-.v-status {
-  margin-top: 0.3rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  padding: 0.2em 0.6em; 
-  border-radius: 0.5rem;
-  background: var(--bg-badge);
-  line-height: 1;
-}
-
-.v-tile.inactive {
-  opacity: 0.2;
-  filter: grayscale(60%);
-}
-  */
-
 </style>
