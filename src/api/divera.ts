@@ -51,7 +51,7 @@ export async function fetchUpcomingEvents(): Promise<DiveraEvent[]> {
   const now = Date.now() / 1000
   return sorting
     .map(id => items[id])
-    .filter(e => e && !e.deleted && !e.hidden && (e.ts_start ?? e.date) >= now)
+    .filter((e): e is DiveraEvent => !!e && !e.deleted && !e.hidden && (e.ts_start ?? e.date) >= now)
     .slice(0, 8)
 }
 
@@ -68,7 +68,7 @@ export async function fetchRecentNews(): Promise<DiveraNews[]> {
   const sorting: number[] = json?.data?.sorting ?? []
   return sorting
     .map(id => items[id])
-    .filter(n => n && !n.deleted && !n.hidden)
+    .filter((n): n is DiveraNews => !!n && !n.deleted && !n.hidden)
     .slice(0, 6)
 }
 export async function fetchVehicleStatus(diveraId: number, apiKey: string): Promise<number | null> {
