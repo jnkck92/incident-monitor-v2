@@ -13,6 +13,18 @@ export function useVehicleStatus(
   async function fetchAll() {
     if (import.meta.env.VITE_USE_MOCK === 'true') {
       try {
+        const keyword = new URLSearchParams(window.location.search).get('alarm')
+        if (keyword) {
+          const res = await fetch(`/mock/${keyword}.json`)
+          if (res.ok) {
+            const json = await res.json()
+            if (json.vehicleStatuses) {
+              statuses.value = json.vehicleStatuses
+              return
+            }
+          }
+        }
+        // Fallback: globale Standby-Statuses
         const res = await fetch('/mock/vehicle-statuses.json')
         if (res.ok) statuses.value = await res.json()
       } catch { }

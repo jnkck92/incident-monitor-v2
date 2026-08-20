@@ -9,6 +9,7 @@ import { useVehicleStatus } from './composables/useVehicleStatus'
 import StandbyView from './views/StandbyView.vue'
 import AlarmView from './views/AlarmView.vue'
 import ClosingView from './views/ClosingView.vue'
+import InfoView from './views/InfoView.vue'
 
 const ownVehicleId = config.ownVehicleId
 
@@ -50,6 +51,9 @@ const resolvedStatusShort = computed(() => {
   return Object.fromEntries(Object.entries(cfg).map(([k, v]) => [Number(k), v]))
 })
 
+const currentView = new URLSearchParams(window.location.search).get('view')
+const isInfoView = currentView === 'info'
+
 onMounted(() => {
   navigator.wakeLock?.request('screen').catch(() => {})
 })
@@ -57,6 +61,15 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- Standalone InfoView – kein Alarm-Monitoring -->
+  <InfoView
+    v-if="isInfoView"
+    :departmentName="config.departmentName"
+    :connectionOk="true"
+  />
+
+  <!-- Normales Alarm-Monitoring -->
+  <template v-else>
 
   <Transition name="view" mode="out-in">
 
@@ -101,7 +114,7 @@ onMounted(() => {
     />
 
   </Transition>
-  
+  </template>
 </template>
 
 <style scoped>

@@ -4,5 +4,18 @@
   "address": "Musterstraße 1, 12345 Musterstadt",
   "closed": false,
   "priority": true,
-  "date": 1786349792
+  "date": 1786349792,
+  "vehicleStatuses": {
+    "elw1": 4,
+    "hlf20": 4,
+    "tlf16": 4,
+    "rw1": 3,
+    "sw2000": 1,
+    "mtw1": 2,
+    "rtb1": 6,
+    "ortsbm": 4,
+    "stellvortsbm": 4,
+    "zugfuehrer": 4,
+    "stellvzugfuehrer": 3
+  }
 }

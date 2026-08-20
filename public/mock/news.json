@@ -1,0 +1,44 @@
+{
+  "success": true,
+  "data": {
+    "items": {
+      "1": {
+        "id": 1,
+        "title": "Neue Dienstanweisung: Rückwärtsfahren",
+        "text": "Rückwärtsfahren mit Fahrzeugen ist ab sofort nur noch mit einem Einweiser gestattet. Dies gilt für alle Fahrzeuge auf dem Wachengelände.",
+        "date": 1787047200,
+        "ts_create": 1787047200,
+        "deleted": false,
+        "hidden": false
+      },
+      "2": {
+        "id": 2,
+        "title": "Dienstplan September veröffentlicht",
+        "text": "Der Dienstplan für September 2026 wurde im DIVERA-Portal veröffentlicht. Bitte prüft eure Einträge und meldet Korrekturen bis 25.08. an den Zugführer.",
+        "date": 1786784400,
+        "ts_create": 1786784400,
+        "deleted": false,
+        "hidden": false
+      },
+      "3": {
+        "id": 3,
+        "title": "Fahrzeugcheck HLF20 abgeschlossen",
+        "text": "Der jährliche Fahrzeugcheck des HLF20 wurde erfolgreich abgeschlossen. Das Fahrzeug ist wieder vollständig einsatzbereit.",
+        "date": 1786370400,
+        "ts_create": 1786370400,
+        "deleted": false,
+        "hidden": false
+      },
+      "4": {
+        "id": 4,
+        "title": "Neue Atemschutzmasken eingetroffen",
+        "text": "Die neuen Atemschutzmasken (Dräger FPS 7000) sind eingetroffen und wurden bereits den Kameradinnen und Kameraden zugewiesen.",
+        "date": 1785236400,
+        "ts_create": 1785236400,
+        "deleted": false,
+        "hidden": false
+      }
+    },
+    "sorting": [1, 2, 3, 4]
+  }
+}

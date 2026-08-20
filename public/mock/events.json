@@ -1,0 +1,48 @@
+{
+  "success": true,
+  "data": {
+    "items": {
+      "1": {
+        "id": 1,
+        "title": "Übung Atemschutzgeräteträger",
+        "date": 1787680800,
+        "ts_start": 1787680800,
+        "ts_end": 1787690000,
+        "address": "Gerätehaus Ritterhude",
+        "deleted": false,
+        "hidden": false
+      },
+      "2": {
+        "id": 2,
+        "title": "Dienstbesprechung",
+        "date": 1788375600,
+        "ts_start": 1788375600,
+        "ts_end": 1788382800,
+        "address": "Feuerwehrhaus",
+        "deleted": false,
+        "hidden": false
+      },
+      "3": {
+        "id": 3,
+        "title": "Fahrzeugkunde HLF20",
+        "date": 1789059600,
+        "ts_start": 1789059600,
+        "ts_end": 1789070400,
+        "address": "Fahrzeughalle",
+        "deleted": false,
+        "hidden": false
+      },
+      "4": {
+        "id": 4,
+        "title": "Jahreshauptübung",
+        "date": 1789912800,
+        "ts_start": 1789912800,
+        "ts_end": 1789934400,
+        "address": "Industriegebiet Nord",
+        "deleted": false,
+        "hidden": false
+      }
+    },
+    "sorting": [1, 2, 3, 4]
+  }
+}

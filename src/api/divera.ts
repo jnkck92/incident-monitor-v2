@@ -16,6 +16,61 @@ export interface AlarmLogEntry {
   loggedAt: string
 }
 
+export interface DiveraEvent {
+  id: number
+  title: string
+  date: number
+  ts_start?: number
+  ts_end?: number
+  address?: string
+  deleted?: boolean
+  hidden?: boolean
+}
+
+export interface DiveraNews {
+  id: number
+  title: string
+  text?: string
+  date: number
+  ts_create: number
+  deleted?: boolean
+  hidden?: boolean
+}
+
+export async function fetchUpcomingEvents(): Promise<DiveraEvent[]> {
+  const useMock = import.meta.env.VITE_USE_MOCK === 'true'
+  const url = useMock
+    ? '/mock/events.json'
+    : `/divera-api/api/v2/events?accesskey=${encodeURIComponent(config.diveraApiKey)}`
+
+  const res = await fetch(url, { signal: AbortSignal.timeout(10_000) })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const json = await res.json()
+  const items: Record<string, DiveraEvent> = json?.data?.items ?? {}
+  const sorting: number[] = json?.data?.sorting ?? []
+  const now = Date.now() / 1000
+  return sorting
+    .map(id => items[id])
+    .filter(e => e && !e.deleted && !e.hidden && (e.ts_start ?? e.date) >= now)
+    .slice(0, 8)
+}
+
+export async function fetchRecentNews(): Promise<DiveraNews[]> {
+  const useMock = import.meta.env.VITE_USE_MOCK === 'true'
+  const url = useMock
+    ? '/mock/news.json'
+    : `/divera-api/api/v2/news?accesskey=${encodeURIComponent(config.diveraApiKey)}`
+
+  const res = await fetch(url, { signal: AbortSignal.timeout(10_000) })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const json = await res.json()
+  const items: Record<string, DiveraNews> = json?.data?.items ?? {}
+  const sorting: number[] = json?.data?.sorting ?? []
+  return sorting
+    .map(id => items[id])
+    .filter(n => n && !n.deleted && !n.hidden)
+    .slice(0, 6)
+}
 export async function fetchVehicleStatus(diveraId: number, apiKey: string): Promise<number | null> {
   try {
     const url = `/divera-api/api/v2/using-vehicles/get-status/${diveraId}?accesskey=${encodeURIComponent(apiKey)}`
