@@ -44,10 +44,13 @@ const vehicleCols = computed(() => bestCols(vehicles.value.length))
         :key="v.id"
         class="person-badge"
         :style="vehicleStatuses[v.id] !== undefined
-          ? { borderColor: statusColors[vehicleStatuses[v.id]!], background: statusColors[vehicleStatuses[v.id]!] + '30' }
-          : {}"
+          ? { borderLeftColor: statusColors[vehicleStatuses[v.id]!] }
+          : { borderLeftColor: 'var(--border-faint)' }"
       >
-        <span class="person-name">{{ v.shortName }}</span>
+        <div class="person-info">
+          <span class="person-name">{{ v.shortName }}</span>
+          <span class="person-ric">{{ v.ric }}</span>
+        </div>
         <span
           v-if="vehicleStatuses[v.id] !== undefined"
           class="person-status"
@@ -89,7 +92,7 @@ const vehicleCols = computed(() => bestCols(vehicles.value.length))
   gap: clamp(0.3rem, 0.5vw, 0.6rem);
   padding: clamp(0.4rem, 0.8vw, 0.8rem) clamp(0.5rem, 1vw, 1rem);
   border-bottom: 1px solid var(--border-tile);
-  /* kein eigenes background – fällt durch auf den globalen Hintergrund */
+  background-color: var(--bg-surface);
 }
 
 .person-badge {
@@ -105,6 +108,13 @@ const vehicleCols = computed(() => bestCols(vehicles.value.length))
   background-size: 18px 18px;             /* gleiche Dot-Textur */
   flex: 1;
   min-width: max-content;
+}
+
+.person-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  min-width: 0;
 }
 
 .person-name {
@@ -125,6 +135,14 @@ const vehicleCols = computed(() => bestCols(vehicles.value.length))
   margin-left: auto;    /* ← nach rechts schieben */
 }
 
+.person-ric {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: clamp(0.5rem, 1vw, 0.9rem);
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
 .card-container {
   flex: 1;
   min-height: 0;
@@ -132,5 +150,6 @@ const vehicleCols = computed(() => bestCols(vehicles.value.length))
   flex-direction: column;
   gap: clamp(0.4rem, 0.8vh, 1rem);
   padding: clamp(0.5rem, 1vw, 1rem);
+  background-color: var(--bg-surface);
 }
 </style>

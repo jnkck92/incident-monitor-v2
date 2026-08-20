@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-
 import type { Vehicle } from '../vehicles'
-
 import Header from '../components/AlarmHeader.vue'
 import Card from '../components/Card.vue'
 
@@ -22,54 +20,75 @@ const props = defineProps<{
   statusShort: Record<number, string>
 }>()
 
-const persons  = computed(() => props.allVehicles.filter(v => v.group === 'person'))
+const persons       = computed(() => props.allVehicles.filter(v => v.group === 'person'))
 const vehiclesGroup = computed(() => props.allVehicles.filter(v => v.group !== 'person'))
+const activeIds     = computed(() => new Set(props.vehicles.map(v => v.id)))
 
-const activeIds = computed(() => new Set(props.vehicles.map(v => v.id)))
+function bestCols(n: number): number {
+  if (n <= 0) return 1
+  const divisors: number[] = []
+  for (let i = 1; i <= n; i++) {
+    if (n % i === 0) divisors.push(i)
+  }
+  const sqrtN = Math.sqrt(n)
+  return divisors.filter(d => d >= sqrtN)[0] ?? n
+}
 
+const vehicleCols = computed(() => bestCols(vehiclesGroup.value.length))
 </script>
 
 <template>
-
   <div class="wrapper">
-     <Header
+    <Header
       :keyword="keyword"
       :rule-label="ruleLabel"
       :address="address"
       :alarm-date="alarmDate"
       :header-color="headerColor"
     />
-    <div class="card-wrapper">
-      <div class="card-container">
-        <Card 
-          v-for="v in persons" 
-          :key="v.id" 
-          :vehicle="v"
-          :isOwn="v.id === ownVehicleId"
-          :status="vehicleStatuses[v.id]"
-          :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
-          :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
-        />
-      </div>
-      <div class="card-container">
-        <Card 
-          v-for="v in vehiclesGroup"
-          :key="v.id" 
-          :vehicle="v"
-          :isOwn="v.id === ownVehicleId"
-          :isActive="activeIds.has(v.id)"
-          :status="vehicleStatuses[v.id]"
-          :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
-          :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
-        />
+
+    <div class="persons-bar">
+      <div
+        v-for="v in persons"
+        :key="v.id"
+        class="person-badge"
+        :style="vehicleStatuses[v.id] !== undefined
+          ? { borderLeftColor: statusColors[vehicleStatuses[v.id]!] }
+          : { borderLeftColor: 'var(--border-faint)' }"
+      >
+        <div class="person-info">
+          <span class="person-name">{{ v.shortName }}</span>
+          <span class="person-ric">{{ v.ric }}</span>
+        </div>
+        <span
+          v-if="vehicleStatuses[v.id] !== undefined"
+          class="person-status"
+          :style="{ color: statusColors[vehicleStatuses[v.id]!] }"
+        >
+          {{ statusShort[vehicleStatuses[v.id]!] }}
+        </span>
       </div>
     </div>
-  </div>
 
+    <div
+      class="card-container"
+      :style="{ gridTemplateColumns: `repeat(${vehicleCols}, 1fr)` }"
+    >
+      <Card
+        v-for="v in vehiclesGroup"
+        :key="v.id"
+        :vehicle="v"
+        :isOwn="v.id === ownVehicleId"
+        :isActive="activeIds.has(v.id)"
+        :status="vehicleStatuses[v.id]"
+        :statusColor="vehicleStatuses[v.id] !== undefined ? statusColors[vehicleStatuses[v.id]!] : undefined"
+        :statusShort="vehicleStatuses[v.id] !== undefined ? statusShort[vehicleStatuses[v.id]!] : undefined"
+      />
+    </div>
+  </div>
 </template>
 
 <style scoped>
-
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -77,40 +96,70 @@ const activeIds = computed(() => new Set(props.vehicles.map(v => v.id)))
   overflow: hidden;
 }
 
-.card-wrapper {
-  display: grid;
-  padding: 1rem;
-  gap: 1rem;
+.persons-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.3rem, 0.5vw, 0.6rem);
+  background-color: var(--bg-surface);
+  padding: clamp(0.4rem, 0.8vw, 0.8rem) clamp(0.5rem, 1vw, 1rem);
+  border-bottom: 1px solid var(--border-tile);
+}
+
+.person-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.3em 0.8em;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-faint);
+  border-left-width: 3px;                  /* Status-Balken wie bei Cards */
+  background-color: var(--bg-tile);
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 18px 18px;             /* gleiche Dot-Textur */
   flex: 1;
+  min-width: max-content;
+}
+
+.person-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  min-width: 0;
+}
+
+.person-name {
+  font-size: clamp(1rem, 2.2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-bright);
+  white-space: nowrap;
+}
+
+.person-status {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: clamp(0.7rem, 1.4vw, 1.3rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  opacity: 0.85;
+  margin-left: auto;    /* ← nach rechts schieben */
+}
+
+.person-ric {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: clamp(0.5rem, 1vw, 0.9rem);
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 0.8vh, 1rem);
+  padding: clamp(0.5rem, 1vw, 1rem);
+  background-color: var(--bg-surface);
 }
-
-.alarm {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  height: 100vh;
-  background: var(--bg-base);
-  animation: alarm-in 0.4s ease-out;
-}
-
-.alarm-footer {
-  padding: 0.5rem clamp(0.8rem, 1.5vw, 1.5rem);
-  border-top: 1px solid var(--border-faint);
-  background: var(--bg-surface);
-  font-size: clamp(0.65rem, 2vw, 2.5rem);
-  color: var(--text-bright);
-  letter-spacing: 0.03em;
-  text-align: center;
-}
-
-.alarm-footer-contact {
-  font-weight: 700;
-  color: var(--text-bright);
-}
-
 </style>

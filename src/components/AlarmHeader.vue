@@ -45,13 +45,16 @@ const { elapsed } = useElapsed(() => props.alarmDate)
 
 <style scoped>
 
-.header { 
-  display: flex; 
-  align-items: stretch; 
-  background: v-bind(headerColor + '20');
-  border-bottom: 1px solid var(--border-header); 
-  border-top: 3px solid v-bind(headerColor);
+.header {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--bg-surface);
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 18px 18px;
+  border-bottom: 1px solid var(--border-tile);
+  border-top: 4px solid v-bind(headerColor);
 }
+
 
 .left { 
   flex: 1; 
@@ -62,13 +65,14 @@ const { elapsed } = useElapsed(() => props.alarmDate)
   gap: 0.15rem; 
 }
 
-.badge { 
-  font-size: clamp(0.7rem, 2.4vw, 2.6rem); 
-  font-weight: 700; 
-  letter-spacing: 0.15em; 
-  text-transform: uppercase; 
-  color: v-bind(headerColor); 
-  margin-bottom: 0.2rem; 
+.badge {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: clamp(0.7rem, 2.4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: v-bind(headerColor);
+  margin-bottom: 0.2rem;
 }
 
 .keyword { 
@@ -108,11 +112,13 @@ const { elapsed } = useElapsed(() => props.alarmDate)
   color: var(--text-muted);
 }
 
-.val { 
-  font-size: clamp(1.1rem, 2vw, 1.8rem); 
-  font-weight: 700; 
-  font-variant-numeric: tabular-nums; 
+.val {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: clamp(1.1rem, 2vw, 1.8rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--text-bright);
+  letter-spacing: 0.05em;
 }
 
 .elapsed { 
