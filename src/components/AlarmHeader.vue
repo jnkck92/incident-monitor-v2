@@ -88,40 +88,43 @@ const { elapsed } = useElapsed(() => props.alarmDate)
   margin-top: 0.2rem; 
 }
 
-.right { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 0.75rem; 
-  align-items: center; 
-  justify-content: center; 
-  padding: 1rem 2.5rem; 
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.5vh, 1.5rem);
+  align-items: flex-end;          /* rechtsbündig */
+  justify-content: center;
+  padding: clamp(0.8rem, 1.5vw, 1.5rem) clamp(1rem, 2.5vw, 2.5rem);
   border-left: 1px solid var(--border-tile);
+  min-width: max-content;
 }
 
-.meta { 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  gap: 0.15rem;
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1em;
 }
 
-.label { 
-  font-size: 0.65rem; 
-  letter-spacing: 0.1em; 
-  text-transform: uppercase; 
-  color: var(--text-muted);
+.label {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: clamp(0.65rem, 1vw, 1rem);   /* sichtbar statt winzig */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
 }
 
 .val {
   font-family: 'Courier New', 'Consolas', monospace;
-  font-size: clamp(1.1rem, 2vw, 1.8rem);
+  font-size: clamp(1.5rem, 3.5vw, 4rem);  /* deutlich größer */
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--text-bright);
   letter-spacing: 0.05em;
+  line-height: 1;
 }
 
-.elapsed { 
+.elapsed {
   color: var(--color-elapsed);
 }
 

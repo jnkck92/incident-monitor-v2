@@ -99,7 +99,7 @@ const vehicleCols = computed(() => bestCols(vehiclesGroup.value.length))
 .persons-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(0.3rem, 0.5vw, 0.6rem);
+  gap: clamp(0.3rem, 0.8vw, 1rem);
   background-color: var(--bg-surface);
   padding: clamp(0.4rem, 0.8vw, 0.8rem) clamp(0.5rem, 1vw, 1rem);
   border-bottom: 1px solid var(--border-tile);
@@ -143,6 +143,11 @@ const vehicleCols = computed(() => bestCols(vehiclesGroup.value.length))
   white-space: nowrap;
   opacity: 0.85;
   margin-left: auto;    /* ← nach rechts schieben */
+  padding: 0.15em 0.5em;
+      /* Hintergrund in Statusfarbe, dezent */
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  border-radius: var(--border-radius);
 }
 
 .person-ric {

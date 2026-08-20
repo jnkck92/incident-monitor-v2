@@ -39,7 +39,7 @@ withDefaults(defineProps<{
   align-items: center;
   justify-content: space-between;
   flex: 1;
-  min-height: 0;           /* verhindert, dass Inhalt die Höhe aufdrückt */
+  min-height: 0;
   padding: clamp(0.4rem, 1.5vh, 1rem) clamp(0.8rem, 2vw, 2rem);
   border-radius: var(--border-radius);
   border: 1px solid var(--border-faint);
@@ -83,8 +83,12 @@ withDefaults(defineProps<{
   font-size: clamp(0.7rem, 2.5vh, 3rem);
   font-weight: 700;
   letter-spacing: 0.1em;
-  opacity: 0.85;
   flex-shrink: 0;
+  padding: 0.15em 0.5em;
+  /* Hintergrund in Statusfarbe, dezent */
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  border-radius: var(--border-radius);
 }
 
 .card.inactive {
